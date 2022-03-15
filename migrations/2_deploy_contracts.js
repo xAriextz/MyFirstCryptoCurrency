@@ -3,5 +3,5 @@
 const BaraToken = artifacts.require("BaraToken");
 
 module.exports = function (deployer) {
-  deployer.deploy(BaraToken);
+  deployer.deploy(BaraToken, 1000000);
 };
