@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "./BaraToken.sol";
 
 contract BaraTokenSale {
-    address admin;
+    address payable admin;
     BaraToken public tokenContract;
     uint256 public tokenPrice;
     uint256 public tokensSold;
@@ -11,7 +11,7 @@ contract BaraTokenSale {
     event Sell(address _buyer, uint256 _amount);
 
     constructor(BaraToken _tokenContract, uint256 _tokenPrice) {
-        admin = msg.sender;
+        admin = payable(msg.sender);
         tokenContract = _tokenContract;
         tokenPrice = _tokenPrice;
     }
@@ -31,5 +31,11 @@ contract BaraTokenSale {
 
         emit Sell(msg.sender, _numberOfTokens);
 
+    }
+
+    function endSale() public {
+        require(msg.sender == admin);
+        require(tokenContract.transfer(admin, tokenContract.balanceOf(address(this))));
+        selfdestruct(admin);
     }
 }
